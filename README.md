@@ -170,5 +170,3 @@ Capacidad de generar reportes filtrados:
 - **Base de Datos**: PostgreSQL / SQLite (para entornos locales).
 - **ORM**: Prisma / Sequelize / TypeORM.
 - **Contenedores**: Docker (opcional para despliegue).
-
-/
