@@ -37,7 +37,6 @@ La gestión de grandes comunidades en Discord requiere herramientas que vayan m�
 
 ## 4. Diagrama Entidad-Relación (E-R)
 
-Representación del modelo relacional de la base de datos con sus entidades, atributos y relaciones.
 
 ![Diagrama Entidad-Relación](Diagrama%20en%20blanco.png)
 
@@ -50,7 +49,7 @@ Representación del modelo relacional de la base de datos con sus entidades, atr
 
 ## 5. Diagrama E-R en UML (Diagrama de Clases)
 
-Representación orientada a objetos del sistema de moderación, mostrando las clases con sus atributos, métodos y relaciones.
+
 
 
 
@@ -110,63 +109,3 @@ classDiagram
     ModerationSystem ..> Ban : crea
 ```
 
-
-
-
-## 6. Bot de Moderación Avanzada
-
-Este bot implementa un sistema completo de moderación basado en bases de datos relacionales para persistencia y trazabilidad.
-
-### Base de Datos
-El esquema de base de datos está diseñado para soportar operaciones críticas de moderación:
-- **Advertencias (Warnings)**: Cada advertencia se almacena con un ID único, el moderador responsable, la razón y el peso (puntos).
-- **Baneos (Bans)**: Soporte para *temp-bans* (baneos temporales) y permanentes, con verificación automática de expiración.
-- **Historial (History/Logs)**: Un registro inmutable de todas las acciones tomadas contra un usuario.
-
-### Funciones Principales
-
-#### 🔸 Warn Automático
-El sistema puede emitir advertencias automáticamente basadas en reglas predefinidas (ej. spam, malas palabras).
-- **Trigger**: Detección de patrón (Regex) o frecuencia de mensajes.
-- **Acción**: Envío de MD al usuario y registro en base de datos.
-
-#### 🔸 Sistema de Puntos
-Cada infracción suma puntos al perfil del usuario.
-- **Escalado de Castigos**:
-    - 3 puntos: Mute temporal (1h).
-    - 5 puntos: Kick.
-    - 10 puntos: Ban temporal (24h).
-    - 20 puntos: Ban permanente.
-
-#### 🔸 Auto-moderación Configurable
-Los administradores pueden ajustar la sensibilidad del bot:
-- Filtros de palabras prohibidas.
-- Límites de menciones masivas.
-- Detección de invitaciones a otros servidores.
-- Protección contra flood.
-
-#### 🔸 Logs Persistentes
-A diferencia de los logs de auditoría de Discord (que pueden ser limitados o rotar), este sistema guarda logs indefinidamente en la base de datos externa para futuras referencias y análisis forense.
-
-### Prácticas de Ingeniería
-
-#### Registro Estructurado (Structured Logging)
-Los logs no son solo texto plano; se guardan con metadatos estructurados (JSON/Columnas) permitiendo búsquedas precisas por tipo de evento, severidad o actor.
-
-#### Consultas por Usuario
-Comandos optimizados para recuperar todo el historial de un usuario específico instantáneamente:
-- `!history @usuario` -> Muestra warnings, kicks y bans previos.
-- `!check @usuario` -> Muestra estado actual y puntos acumulados.
-
-#### Filtrado de Datos
-Capacidad de generar reportes filtrados:
-- "Mostrar todos los bans del último mes".
-- "Listar usuarios con más de 10 puntos de infracción".
-- "Ver acciones realizadas por el moderador X".
-
-## Tecnologías Usadas
-- **Lenguaje**: TypeScript / Node.js (o Python según preferencia de implementación).
-- **Librería Discord**: Discord.js / discord.py.
-- **Base de Datos**: PostgreSQL / SQLite (para entornos locales).
-- **ORM**: Prisma / Sequelize / TypeORM.
-- **Contenedores**: Docker (opcional para despliegue).
